@@ -4,10 +4,12 @@
 #include "Texture.h"
 #include "Game.h"
 #include "ResourceManager.h"
+#include "Lobby.h"
 
-LobbyMenuHost::LobbyMenuHost(GameClient* game_client)
+LobbyMenuHost::LobbyMenuHost(GameClient* game_client, Lobby* lobby)
 {
 	_game_client = game_client;
+	_lobby = lobby;
 
 	_texture_background = _game_client->getResourceManager()->getTexture("texture_background_main_menu");
 
@@ -57,7 +59,7 @@ void LobbyMenuHost::update()
 //-----------------------------------------------------------------------------
 // Purpose: Sets the ID of the lobby to display
 //-----------------------------------------------------------------------------
-void LobbyMenuHost::SetLobbySteamID(const CSteamID &steam_id_lobby)
+void LobbyMenuHost::setLobbySteamID(const CSteamID &steam_id_lobby)
 {
-	_steam_id_lobby = steam_id_lobby;
+	_lobby->setLobbySteamID(steam_id_lobby);
 }

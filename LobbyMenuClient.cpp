@@ -4,13 +4,13 @@
 #include "Texture.h"
 #include "Game.h"
 #include "ResourceManager.h"
+#include "Lobby.h"
 #include <iostream>
 
-LobbyMenuClient::LobbyMenuClient(GameClient* game_client) : m_CallbackPersonaStateChange(this, &LobbyMenuClient::OnPersonaStateChange),
-															m_CallbackLobbyDataUpdate(this, &LobbyMenuClient::OnLobbyDataUpdate),
-															m_CallbackChatDataUpdate(this, &LobbyMenuClient::OnLobbyChatUpdate)
+LobbyMenuClient::LobbyMenuClient(GameClient* game_client, Lobby* lobby)
 {
 	_game_client = game_client;
+	_lobby = lobby;
 
 	_texture_background = _game_client->getResourceManager()->getTexture("texture_background_main_menu");
 
@@ -53,56 +53,7 @@ void LobbyMenuClient::update()
 //-----------------------------------------------------------------------------
 // Purpose: Sets the ID of the lobby to display
 //-----------------------------------------------------------------------------
-void LobbyMenuClient::SetLobbySteamID(const CSteamID &steam_id_lobby)
+void LobbyMenuClient::setLobbySteamID(const CSteamID &steam_id_lobby)
 {
-	_steam_id_lobby = steam_id_lobby;
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: Handles a user in the lobby changing their name or details
-//			( note: joining and leaving is handled below by CLobby::OnLobbyChatUpdate() )
-//-----------------------------------------------------------------------------
-void LobbyMenuClient::OnPersonaStateChange(PersonaStateChange_t *pCallback)
-{
-	// callbacks are broadcast to all listeners, so we'll get this for every friend who changes state
-	// so make sure the user is in the lobby before acting
-	if (!SteamFriends()->IsUserInSource(pCallback->m_ulSteamID, _steam_id_lobby))
-		return;
-
-	std::cout << "OnPersonaStateChange" << std::endl;
-
-}
-
-
-//-----------------------------------------------------------------------------
-// Purpose: Handles lobby data changing
-//-----------------------------------------------------------------------------
-void LobbyMenuClient::OnLobbyDataUpdate(LobbyDataUpdate_t *pCallback)
-{
-	std::cout << "OnLobbyDataUpdate" << std::endl;
-
-	// callbacks are broadcast to all listeners, so we'll get this for every lobby we're requesting
-	if (_steam_id_lobby != pCallback->m_ulSteamIDLobby)
-		return;
-
-	std::cout << SteamMatchmaking()->GetLobbyData(_steam_id_lobby, "lobby_name") << std::endl;
-	std::cout << SteamMatchmaking()->GetLobbyData(_steam_id_lobby, "host_name") << std::endl;
-	std::cout << SteamMatchmaking()->GetLobbyData(_steam_id_lobby, "map_name") << std::endl;
-	std::cout << std::stoi(SteamMatchmaking()->GetLobbyData(_steam_id_lobby, "max_nr_of_players")) << std::endl;
-	std::cout << SteamMatchmaking()->GetNumLobbyMembers(_steam_id_lobby) << std::endl;
-
-}
-
-
-//-----------------------------------------------------------------------------
-// Purpose: Handles users in the lobby joining or leaving
-//-----------------------------------------------------------------------------
-void LobbyMenuClient::OnLobbyChatUpdate(LobbyChatUpdate_t *pCallback)
-{
-	// callbacks are broadcast to all listeners, so we'll get this for every lobby we're requesting
-	if (_steam_id_lobby != pCallback->m_ulSteamIDLobby)
-		return;
-
-	std::cout << "OnLobbyChatUpdate" << std::endl;
-
+	_lobby->setLobbySteamID(steam_id_lobby);
 }

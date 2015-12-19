@@ -6,15 +6,16 @@
 class GameClient;
 class MenuButton;
 class Texture;
+class Lobby;
 
 class LobbyMenuClient
 {
 public:
-	LobbyMenuClient(GameClient* game_client);
+	LobbyMenuClient(GameClient* game_client, Lobby* lobby);
 	~LobbyMenuClient();
 
 	void runFrame();
-	void SetLobbySteamID(const CSteamID &steam_id_lobby);
+	void setLobbySteamID(const CSteamID &steam_id_lobby);
 
 private:
 	void render();
@@ -27,13 +28,6 @@ private:
 
 	Texture* _texture_background;
 
-	CSteamID _steam_id_lobby;
-
-	// user state change handler
-	STEAM_CALLBACK(LobbyMenuClient, OnPersonaStateChange, PersonaStateChange_t, m_CallbackPersonaStateChange);
-
-	// lobby state change handler
-	STEAM_CALLBACK(LobbyMenuClient, OnLobbyDataUpdate, LobbyDataUpdate_t, m_CallbackLobbyDataUpdate);
-	STEAM_CALLBACK(LobbyMenuClient, OnLobbyChatUpdate, LobbyChatUpdate_t, m_CallbackChatDataUpdate);
+	Lobby* _lobby;
 };
 

@@ -5,16 +5,16 @@
 class GameClient;
 class MenuButton;
 class Texture;
-
+class Lobby;
 
 class LobbyMenuHost
 {
 public:
-	LobbyMenuHost(GameClient* game_client);
+	LobbyMenuHost(GameClient* game_client, Lobby* _lobby);
 	~LobbyMenuHost();
 
 	void runFrame();
-	void SetLobbySteamID(const CSteamID &steam_id_lobby);
+	void setLobbySteamID(const CSteamID &steam_id_lobby);
 
 private:
 	void render();
@@ -28,6 +28,6 @@ private:
 
 	Texture* _texture_background;
 
-	CSteamID _steam_id_lobby;
+	Lobby* _lobby;
 };
 

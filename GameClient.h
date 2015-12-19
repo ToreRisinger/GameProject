@@ -14,6 +14,7 @@ class LobbyMenuHost;
 class LobbyMenuClient;
 class GameServer;
 class BrowseServerMenu;
+class Lobby;
 struct SDL_Renderer;
 
 enum GameClientState {
@@ -69,6 +70,8 @@ private:
 	SDL_Renderer* _renderer;
 	Input* _input;
 	ResourceManager* _resource_manager;
+
+	Lobby* _lobby;
 
 	MainMenu* _main_menu;
 	CreateGameMenu* _create_game_menu;

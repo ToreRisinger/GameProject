@@ -4,6 +4,7 @@
 *.dll
 *.filters
 *.vcxproj
+*.sln
 
 # User-specific files
 *.suo
