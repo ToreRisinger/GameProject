@@ -71,8 +71,6 @@ void LobbyMenuClient::OnPersonaStateChange(PersonaStateChange_t *pCallback)
 
 	std::cout << "OnPersonaStateChange" << std::endl;
 
-	// rebuild the menu
-	//m_pMenu->Rebuild(m_steamIDLobby);
 }
 
 
@@ -81,6 +79,8 @@ void LobbyMenuClient::OnPersonaStateChange(PersonaStateChange_t *pCallback)
 //-----------------------------------------------------------------------------
 void LobbyMenuClient::OnLobbyDataUpdate(LobbyDataUpdate_t *pCallback)
 {
+	std::cout << "OnLobbyDataUpdate" << std::endl;
+
 	// callbacks are broadcast to all listeners, so we'll get this for every lobby we're requesting
 	if (_steam_id_lobby != pCallback->m_ulSteamIDLobby)
 		return;
@@ -89,15 +89,8 @@ void LobbyMenuClient::OnLobbyDataUpdate(LobbyDataUpdate_t *pCallback)
 	std::cout << SteamMatchmaking()->GetLobbyData(_steam_id_lobby, "host_name") << std::endl;
 	std::cout << SteamMatchmaking()->GetLobbyData(_steam_id_lobby, "map_name") << std::endl;
 	std::cout << std::stoi(SteamMatchmaking()->GetLobbyData(_steam_id_lobby, "max_nr_of_players")) << std::endl;
-	//std::cout << std::stoi(SteamMatchmaking()->GetLobbyData(_steam_id_lobby, "nr_of_players")) << std::endl;
 	std::cout << SteamMatchmaking()->GetNumLobbyMembers(_steam_id_lobby) << std::endl;
 
-
-	// set the heading
-	//m_pMenu->SetHeading(SteamMatchmaking()->GetLobbyData(m_steamIDLobby, "name"));
-
-	// rebuild the menu
-	//m_pMenu->Rebuild(m_steamIDLobby);
 }
 
 
@@ -110,20 +103,6 @@ void LobbyMenuClient::OnLobbyChatUpdate(LobbyChatUpdate_t *pCallback)
 	if (_steam_id_lobby != pCallback->m_ulSteamIDLobby)
 		return;
 
-	std::cout << "OnLobbyDataUpdate" << std::endl;
+	std::cout << "OnLobbyChatUpdate" << std::endl;
 
-	// rebuild the menu
-	//m_pMenu->Rebuild(m_steamIDLobby);
-
-
-	//int cLobbyMembers = SteamMatchmaking()->GetNumLobbyMembers(m_steamIDLobby);
-	//for (int i = 0; i < cLobbyMembers; i++)
-	//{
-		//CSteamID steamIDLobbyMember = SteamMatchmaking()->GetLobbyMemberByIndex(m_steamIDLobby, i);
-
-		// ignore yourself.
-		//if (SteamUser()->GetSteamID() == steamIDLobbyMember)
-			//continue;
-
-	//}
 }

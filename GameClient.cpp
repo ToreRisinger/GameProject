@@ -96,14 +96,14 @@ void GameClient::changeGameClientState(GameClientState game_client_state)
 	if (_game_client_state == HOST_IN_LOBBY && game_client_state != HOST_IN_LOBBY)
 	{
 		// leave the lobby
-		//SteamMatchmaking()->LeaveLobby(_steam_id_lobby);
-		//_steam_id_lobby = CSteamID();
+		SteamMatchmaking()->LeaveLobby(_steam_id_lobby);
+		_steam_id_lobby = CSteamID();
 	}
 	else if (_game_client_state == CLIENT_IN_LOBBY && game_client_state != CLIENT_IN_LOBBY)
 	{
 		// leave the lobby
-		//SteamMatchmaking()->LeaveLobby(_steam_id_lobby);
-		//_steam_id_lobby = CSteamID();
+		SteamMatchmaking()->LeaveLobby(_steam_id_lobby);
+		_steam_id_lobby = CSteamID();
 	}
 
 	// ENTERING A STATE
