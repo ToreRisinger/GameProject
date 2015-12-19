@@ -21,6 +21,7 @@ MainMenu::MainMenu(GameClient* game_client)
 
 MainMenu::~MainMenu()
 {
+	
 }
 
 void MainMenu::runFrame()

@@ -6,8 +6,7 @@
 #include "Input.h"
 #include "ResourceManager.h"
 #include "CreateGameMenu.h"
-#include "LobbyMenuHost.h"
-#include "LobbyMenuClient.h"
+#include "LobbyMenu.h"
 #include "BrowseServerMenu.h"
 #include "GameServer.h"
 #include "Lobby.h"
@@ -36,13 +35,14 @@ GameClient::GameClient(Game* game)
 
 	_lobby = new Lobby(this);
 	
-	_lobby_menu_host = new LobbyMenuHost(this, _lobby);
-	_lobby_menu_client = new LobbyMenuClient(this, _lobby);
+	_lobby_menu = new LobbyMenu(this, _lobby);
 	_browse_server_menu = new BrowseServerMenu(this);
 
 	_game_server = nullptr;
 
 	_steam_user_stats = SteamUserStats();
+
+	_steam_id_this_user = SteamUser()->GetSteamID();
 }
 
 GameClient::~GameClient()
@@ -75,11 +75,11 @@ void GameClient::runFrame()
 	}
 	else if (_game_client_state == HOST_IN_LOBBY)
 	{	
-		_lobby_menu_host->runFrame();
+		_lobby_menu->runFrame();
 	}
 	else if (_game_client_state == CLIENT_IN_LOBBY)
 	{
-		_lobby_menu_client->runFrame();
+		_lobby_menu->runFrame();
 	}
 
 	if (_input->getQuit())
@@ -102,14 +102,14 @@ void GameClient::changeGameClientState(GameClientState game_client_state)
 		// leave the lobby
 		SteamMatchmaking()->LeaveLobby(_steam_id_lobby);
 		_steam_id_lobby = CSteamID();
-		_lobby_menu_host->setLobbySteamID(_steam_id_lobby);
+		_lobby_menu->setLobbySteamID(_steam_id_lobby);
 	}
 	else if (_game_client_state == CLIENT_IN_LOBBY && game_client_state != CLIENT_IN_LOBBY)
 	{
 		// leave the lobby
 		SteamMatchmaking()->LeaveLobby(_steam_id_lobby);
 		_steam_id_lobby = CSteamID();
-		_lobby_menu_host->setLobbySteamID(_steam_id_lobby);
+		_lobby_menu->setLobbySteamID(_steam_id_lobby);
 	}
 
 	// ENTERING A STATE
@@ -189,7 +189,7 @@ void GameClient::OnLobbyCreated(LobbyCreated_t *pCallback, bool bIOFailure)
 	{
 		// success
 		_steam_id_lobby = pCallback->m_ulSteamIDLobby;
-		_lobby_menu_host->setLobbySteamID(_steam_id_lobby);
+		_lobby_menu->setLobbySteamID(_steam_id_lobby);
 	
 		// set the name of the lobby if it's ours
 
@@ -216,7 +216,7 @@ void GameClient::OnLobbyCreated(LobbyCreated_t *pCallback, bool bIOFailure)
 
 		SteamMatchmaking()->SetLobbyData(_steam_id_lobby, "lobby_name", std::to_string(rnd).c_str());
 		SteamMatchmaking()->SetLobbyData(_steam_id_lobby, "map_name", std::to_string(rnd).c_str());
-
+		
 		SteamMatchmaking()->SetLobbyData(_steam_id_lobby, "host_name", host_name.c_str());
 		SteamMatchmaking()->SetLobbyData(_steam_id_lobby, "max_nr_of_players", std::to_string(4).c_str());
 		int nr_of_players = SteamMatchmaking()->GetNumLobbyMembers(_steam_id_lobby);
@@ -224,6 +224,7 @@ void GameClient::OnLobbyCreated(LobbyCreated_t *pCallback, bool bIOFailure)
 
 		// mark that we're in the lobby
 		changeGameClientState(HOST_IN_LOBBY);
+		_lobby_menu->setHost(true);
 	}
 	else
 	{
@@ -245,7 +246,7 @@ void GameClient::OnLobbyEntered(LobbyEnter_t *pCallback, bool bIOFailure)
 	{
 		// failed, show error
 		std::cout << "Failed to enter lobby" << std::endl;;
-		changeGameClientState(MAIN_MENU);
+		changeGameClientState(BROWSE_SERVERS);
 		return;
 	}
 
@@ -253,11 +254,12 @@ void GameClient::OnLobbyEntered(LobbyEnter_t *pCallback, bool bIOFailure)
 
 	// move forward the state
 	_steam_id_lobby = pCallback->m_ulSteamIDLobby;
-	_lobby_menu_client->setLobbySteamID(_steam_id_lobby);
+	_lobby_menu->setLobbySteamID(_steam_id_lobby);
 
 	int nr_of_players = SteamMatchmaking()->GetNumLobbyMembers(_steam_id_lobby);
 
 	changeGameClientState(CLIENT_IN_LOBBY);
+	_lobby_menu->setHost(false);
 }
 
 bool GameClient::isQuit()
@@ -278,4 +280,9 @@ Input* GameClient::getInput()
 ResourceManager* GameClient::getResourceManager()
 {
 	return _resource_manager;
+}
+
+CSteamID GameClient::getThisUserSteamId()
+{
+	return _steam_id_this_user;
 }

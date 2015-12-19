@@ -10,8 +10,7 @@ class Input;
 class Game;
 class ResourceManager;
 class CreateGameMenu;
-class LobbyMenuHost;
-class LobbyMenuClient;
+class LobbyMenu;
 class GameServer;
 class BrowseServerMenu;
 class Lobby;
@@ -50,11 +49,16 @@ public:
 
 	void joinLobby(CSteamID steam_id_lobby);
 
+	CSteamID getThisUserSteamId();
+
 private:
 	// lobby handling
 
 	// the name of the lobby we're connected to
 	CSteamID _steam_id_lobby;
+
+	// Id of the user on this client.
+	CSteamID _steam_id_this_user;
 
 	// callback for when we're creating a new lobby
 	void OnLobbyCreated(LobbyCreated_t *pCallback, bool bIOFailure);
@@ -75,8 +79,7 @@ private:
 
 	MainMenu* _main_menu;
 	CreateGameMenu* _create_game_menu;
-	LobbyMenuHost* _lobby_menu_host;
-	LobbyMenuClient* _lobby_menu_client;
+	LobbyMenu* _lobby_menu;
 	BrowseServerMenu* _browse_server_menu;
 
 	GameClientState _game_client_state;

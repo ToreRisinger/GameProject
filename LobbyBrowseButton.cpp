@@ -5,6 +5,29 @@
 LobbyBrowseButton::~LobbyBrowseButton()
 {
 	_selected = false;
+	if (_button_text1) 
+	{
+		delete _button_text1;
+		_button_text1 = nullptr;
+	}
+	
+	if (_button_text2)
+	{
+		delete _button_text2;
+		_button_text2 = nullptr;
+	}
+		
+	if (_button_text3)
+	{
+		delete _button_text3;
+		_button_text3 = nullptr;
+	}
+
+	if (_button_text4)
+	{
+		delete _button_text4;
+		_button_text4 = nullptr;
+	}
 }
 
 void LobbyBrowseButton::render()

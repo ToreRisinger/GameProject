@@ -29,7 +29,11 @@ MenuButton::MenuButton(GameClient* game_client, int x, int y, int width, int hei
 
 MenuButton::~MenuButton()
 {
-	delete _button_text1;
+	if (_button_text1) {
+		delete _button_text1;
+		_button_text1 = nullptr;
+	}
+	
 }
 
 void MenuButton::render()

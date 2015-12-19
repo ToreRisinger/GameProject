@@ -3,8 +3,17 @@
 
 #include <steamclientpublic.h>
 #include <steam_api.h>
+#include <vector>
 
 class GameClient;
+class Texture;
+
+struct PlayerInfo
+{
+	std::string player_name = "";
+	Texture* text = nullptr;
+	bool isHost = false;
+};
 
 class Lobby
 {
@@ -19,6 +28,8 @@ private:
 	void render();
 	void input();
 	void update();
+	
+	std::vector<PlayerInfo> _players;
 
 	GameClient* _game_client;
 	
