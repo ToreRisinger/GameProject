@@ -8,11 +8,12 @@
 class GameClient;
 class Texture;
 
-struct PlayerInfo
+struct PlayerSlot
 {
+	bool has_player = false;
 	std::string player_name = "";
 	Texture* text = nullptr;
-	bool isHost = false;
+	bool is_host = false;
 };
 
 class Lobby
@@ -33,8 +34,10 @@ private:
 	void update();
 
 	bool _is_host;
+
+	int _max_nr_of_players;
 	
-	std::vector<PlayerInfo> _players;
+	std::vector<PlayerSlot> _players;
 
 	GameClient* _game_client;
 	

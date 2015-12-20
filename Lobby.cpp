@@ -12,6 +12,7 @@ Lobby::Lobby(GameClient* game_client) : m_CallbackPersonaStateChange(this, &Lobb
 										m_CallbackChatDataUpdate(this, &Lobby::OnLobbyChatUpdate)
 {
 	_game_client = game_client;
+
 }
 
 Lobby::~Lobby()
@@ -36,7 +37,11 @@ void Lobby::render()
 {
 	for (int i = 0; i < _players.size(); i++)
 	{
-		_players.at(i).text->render(100, 100 + i * 100);
+		if (_players.at(i).text)
+		{
+			_players.at(i).text->render(100, 100 + i * 30);
+		}
+			
 	}
 }
 void Lobby::input()
@@ -60,8 +65,7 @@ void Lobby::OnPersonaStateChange(PersonaStateChange_t *pCallback)
 	if (!SteamFriends()->IsUserInSource(pCallback->m_ulSteamID, _steam_id_lobby))
 		return;
 
-	std::cout << "OnPersonaStateChange" << std::endl;
-
+	SteamMatchmaking()->RequestLobbyData(_steam_id_lobby);
 }
 
 
@@ -77,9 +81,11 @@ void Lobby::OnLobbyDataUpdate(LobbyDataUpdate_t *pCallback)
 
 	std::cout << "OnLobbyDataUpdate" << std::endl;
 	
+	//Check how many slots the lobby has
+	int _max_nr_of_players = SteamMatchmaking()->GetLobbyMemberLimit(_steam_id_lobby);
 
 	//Clear old list of players
-	for (int i = 0; i < _players.size(); i++)  
+	for (int i = 0; i < _players.size(); i++)
 	{
 		if (_players.at(i).text)
 		{
@@ -90,41 +96,47 @@ void Lobby::OnLobbyDataUpdate(LobbyDataUpdate_t *pCallback)
 
 	_players.clear();
 
-	// list of users in lobby
-	// iterate all the users in the lobby and show their details
+	//Create a vector with correct amount of slots
+	for (int i = 0; i < _max_nr_of_players; i++)
+	{
+		PlayerSlot p;
+		_players.push_back(p);
+	}
+
+	//Check how menu players in lobby
 	int nr_of_players = SteamMatchmaking()->GetNumLobbyMembers(_steam_id_lobby);
 
-	if (SteamMatchmaking()->GetLobbyOwner(_steam_id_lobby) == _game_client->getThisUserSteamId())
-	{
-		_is_host = true;
-	}
-	
 	for (int i = 0; i < nr_of_players; i++)
 	{
 		CSteamID steamIDLobbyMember = SteamMatchmaking()->GetLobbyMemberByIndex(_steam_id_lobby, i);
 
+		//Check who is the owner / host
+		if (SteamMatchmaking()->GetLobbyOwner(_steam_id_lobby) == steamIDLobbyMember)
+		{
+			_players.at(i).is_host = true;
+
+			if (SteamMatchmaking()->GetLobbyOwner(_steam_id_lobby) == _game_client->getThisUserSteamId())
+			{
+				_is_host = true;
+			}
+		}
+
 		// we get the details of a user from the ISteamFriends interface
 		const char *pchName = SteamFriends()->GetFriendPersonaName(steamIDLobbyMember);
-		
+
 		if (pchName && *pchName)
-		{
-			PlayerInfo p;
-			p.isHost = false;
-			p.player_name = pchName;
-			p.text = _game_client->getResourceManager()->getTextureText(p.player_name, { 0xFF, 0xFF, 0xFF }, 20);
-			_players.push_back(p);
+		{	
+			_players.at(i).player_name = pchName;
+
+			if (_players.at(i).text) 
+			{
+				delete _players.at(i).text;
+				_players.at(i).text = nullptr;
+			}
+
+			_players.at(i).text = _game_client->getResourceManager()->getTextureText(_players.at(i).player_name, { 0xFF, 0xFF, 0xFF }, 20);
 		}
 	}
-
-	//virtual CSteamID GetLobbyOwner(CSteamID steamIDLobby) = 0;
-
-	/*
-	std::cout << SteamMatchmaking()->GetLobbyData(_steam_id_lobby, "lobby_name") << std::endl;
-	std::cout << SteamMatchmaking()->GetLobbyData(_steam_id_lobby, "host_name") << std::endl;
-	std::cout << SteamMatchmaking()->GetLobbyData(_steam_id_lobby, "map_name") << std::endl;
-	std::cout << std::stoi(SteamMatchmaking()->GetLobbyData(_steam_id_lobby, "max_nr_of_players")) << std::endl;
-	std::cout << SteamMatchmaking()->GetNumLobbyMembers(_steam_id_lobby) << std::endl;
-	*/
 }
 
 
@@ -138,7 +150,7 @@ void Lobby::OnLobbyChatUpdate(LobbyChatUpdate_t *pCallback)
 	if (_steam_id_lobby != pCallback->m_ulSteamIDLobby)
 		return;
 
-	std::cout << "OnLobbyChatUpdate" << std::endl;
+	SteamMatchmaking()->RequestLobbyData(_steam_id_lobby);
 }
 
 void Lobby::setHost(bool value)
