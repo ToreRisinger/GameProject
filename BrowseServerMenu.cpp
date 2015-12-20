@@ -163,7 +163,7 @@ void BrowseServerMenu::OnLobbyDataUpdatedCallback(LobbyDataUpdate_t *pCallback)
 		{
 			// pull the name from the lobby metadata
 			_lobby_list.at(i).lobby_name = SteamMatchmaking()->GetLobbyData(_lobby_list.at(i).steam_id_lobby, "lobby_name");
-			_lobby_list.at(i).host_name = SteamMatchmaking()->GetLobbyData(_lobby_list.at(i).steam_id_lobby, "host_name");
+			_lobby_list.at(i).host_name = SteamFriends()->GetFriendPersonaName(SteamMatchmaking()->GetLobbyOwner(_lobby_list.at(i).steam_id_lobby));
 			_lobby_list.at(i).map_name = SteamMatchmaking()->GetLobbyData(_lobby_list.at(i).steam_id_lobby, "map_name");
 			_lobby_list.at(i).max_nr_of_players = std::stoi(SteamMatchmaking()->GetLobbyData(_lobby_list.at(i).steam_id_lobby, "max_nr_of_players"));
 			_lobby_list.at(i).nr_of_players = SteamMatchmaking()->GetNumLobbyMembers(_lobby_list.at(i).steam_id_lobby);

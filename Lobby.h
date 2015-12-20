@@ -24,10 +24,15 @@ public:
 	void runFrame();
 	void setLobbySteamID(const CSteamID &steam_id_lobby);
 
+	void setHost(bool value);
+	bool isHost();
+
 private:
 	void render();
 	void input();
 	void update();
+
+	bool _is_host;
 	
 	std::vector<PlayerInfo> _players;
 

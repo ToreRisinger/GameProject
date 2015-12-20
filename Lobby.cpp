@@ -94,6 +94,11 @@ void Lobby::OnLobbyDataUpdate(LobbyDataUpdate_t *pCallback)
 	// iterate all the users in the lobby and show their details
 	int nr_of_players = SteamMatchmaking()->GetNumLobbyMembers(_steam_id_lobby);
 
+	if (SteamMatchmaking()->GetLobbyOwner(_steam_id_lobby) == _game_client->getThisUserSteamId())
+	{
+		_is_host = true;
+	}
+	
 	for (int i = 0; i < nr_of_players; i++)
 	{
 		CSteamID steamIDLobbyMember = SteamMatchmaking()->GetLobbyMemberByIndex(_steam_id_lobby, i);
@@ -134,4 +139,14 @@ void Lobby::OnLobbyChatUpdate(LobbyChatUpdate_t *pCallback)
 		return;
 
 	std::cout << "OnLobbyChatUpdate" << std::endl;
+}
+
+void Lobby::setHost(bool value)
+{
+	_is_host = value;
+}
+
+bool Lobby::isHost()
+{
+	return _is_host;
 }

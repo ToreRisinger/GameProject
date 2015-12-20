@@ -65,6 +65,11 @@ void LobbyMenu::update()
 		_menu_button1->update();
 
 	_menu_button2->update();
+
+	if (_lobby->isHost())
+	{
+		_is_host = true;
+	}
 }
 
 //-----------------------------------------------------------------------------
