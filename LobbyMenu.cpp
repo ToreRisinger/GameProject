@@ -82,6 +82,7 @@ void LobbyMenu::setLobbySteamID(const CSteamID &steam_id_lobby)
 
 void LobbyMenu::setHost(bool value)
 {
+	_lobby->setHost(false);
 	_is_host = value;
 }
 
