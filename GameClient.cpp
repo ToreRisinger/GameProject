@@ -200,24 +200,10 @@ void GameClient::OnLobbyCreated(LobbyCreated_t *pCallback, bool bIOFailure)
 
 		int rnd = rd() % 9999999;
 
-		//std::cout << "-----CREATE LOBBY-----" << std::endl;
-		//std::cout << "Enter lobby name: " << std::endl;
-		//std::cin >> lobby_name;
-
-		//std::cout << "Enter map name: " << std::endl;
-		//std::cin >> map_name;
-
 		std::string host_name = SteamFriends()->GetPersonaName();
 
-		std::cout << "DEBUG: Creating lobby with name: " << SteamFriends()->GetPersonaName() << std::endl;
-
-		//SteamMatchmaking()->SetLobbyData(_steam_id_lobby, "lobby_name", lobby_name.c_str());
-		//SteamMatchmaking()->SetLobbyData(_steam_id_lobby, "map_name", map_name.c_str());
-
 		SteamMatchmaking()->SetLobbyData(_steam_id_lobby, "lobby_name", std::to_string(rnd).c_str());
-		SteamMatchmaking()->SetLobbyData(_steam_id_lobby, "map_name", std::to_string(rnd).c_str());
-		
-		SteamMatchmaking()->SetLobbyData(_steam_id_lobby, "host_name", host_name.c_str());
+		SteamMatchmaking()->SetLobbyData(_steam_id_lobby, "map_name", "Dirt");
 		SteamMatchmaking()->SetLobbyData(_steam_id_lobby, "max_nr_of_players", std::to_string(4).c_str());
 		int nr_of_players = SteamMatchmaking()->GetNumLobbyMembers(_steam_id_lobby);
 		SteamMatchmaking()->SetLobbyData(_steam_id_lobby, "nr_of_players", std::to_string(nr_of_players).c_str());

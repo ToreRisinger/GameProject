@@ -22,12 +22,6 @@ LobbyBrowseButton::~LobbyBrowseButton()
 		delete _button_text3;
 		_button_text3 = nullptr;
 	}
-
-	if (_button_text4)
-	{
-		delete _button_text4;
-		_button_text4 = nullptr;
-	}
 }
 
 void LobbyBrowseButton::render()
@@ -36,10 +30,9 @@ void LobbyBrowseButton::render()
 
 	int middle_y = _y + _height / 2;
 
-	_button_text1->render(_x + (901 / 8) - _button_text1->getWidth() / 2, middle_y - _button_text1->getHeight() / 2.3);
-	_button_text2->render(_x + (901 / 8) + (901 / 4) - _button_text2->getWidth() / 2, middle_y - _button_text2->getHeight() / 2.3);
-	_button_text3->render(_x + (901 / 8) + (901 / 4) * 2 - _button_text3->getWidth() / 2, middle_y - _button_text3->getHeight() / 2.3);
-	_button_text4->render(_x + (901 / 8) + (901 / 4) * 3 - _button_text4->getWidth() / 2, middle_y - _button_text4->getHeight() / 2.3);
+	_button_text1->render(_x + (901 / 6) - _button_text1->getWidth() / 2, middle_y - _button_text1->getHeight() / 2.3);
+	_button_text2->render(_x + (901 / 6) + (901 / 3) - _button_text2->getWidth() / 2, middle_y - _button_text2->getHeight() / 2.3);
+	_button_text3->render(_x + (901 / 6) + (901 / 3) * 2 - _button_text3->getWidth() / 2, middle_y - _button_text3->getHeight() / 2.3);
 }
 
 

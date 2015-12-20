@@ -14,7 +14,6 @@ struct Lobby_t
 {
 	CSteamID steam_id_lobby;
 	std::string lobby_name = "";
-	std::string host_name = "";
 	std::string map_name = "";
 	int max_nr_of_players = -1;
 	int nr_of_players = -1;
